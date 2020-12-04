@@ -1,4 +1,4 @@
-import { Address, BigInt, EthereumBlock } from '@graphprotocol/graph-ts';
+import { Address, BigDecimal, BigInt, EthereumBlock } from '@graphprotocol/graph-ts';
 import { Emisor, Price } from './../generated/schema';
 import { PiComposition } from '../generated/PiComposition/PiComposition'
 
@@ -32,8 +32,14 @@ export function handleBlock(block: EthereumBlock): void {
             if ((!piSupply.reverted) && (!collateral.reverted)) {
                 price.supply = piSupply.value;
                 price.collateral = collateral.value;
-                price.piPrice = collateral.value.toBigDecimal().div(piSupply.value.toBigDecimal());
-                price.collateralPrice = piSupply.value.toBigDecimal().div(collateral.value.toBigDecimal());
+
+                if ((piSupply.value == BigInt.fromI32(0)) || (collateral.value == BigInt.fromI32(0))) {
+                    price.piPrice = BigDecimal.fromString("0");
+                    price.collateralPrice = BigDecimal.fromString("0");
+                } else {
+                    price.piPrice = collateral.value.toBigDecimal().div(piSupply.value.toBigDecimal());
+                    price.collateralPrice = piSupply.value.toBigDecimal().div(collateral.value.toBigDecimal());
+                }
 
                 price.save();
 
