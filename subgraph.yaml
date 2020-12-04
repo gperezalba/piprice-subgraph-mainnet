@@ -7,7 +7,7 @@ dataSources:
     network: mainnet
     source:
       address: "0x0000000000000000000000000000000000000011"
-      startBlock: 3000000
+      startBlock: 4000000
       abi: PiComposition
     mapping:
       kind: ethereum/events
